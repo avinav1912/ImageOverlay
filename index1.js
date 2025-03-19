@@ -34,10 +34,12 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
         const overlayImage = await Jimp.read(req.file.buffer);
 
         // Resize the overlay image to match the specified dimensions
-
+        console.log(overlaySize);
+        console.log(overlayPosition);
         const width = parseInt(overlaySize?.width, 10);
         const height = parseInt(overlaySize?.height, 10);
-
+        console.log(width);
+        console.log(height);
         if (isNaN(width) || isNaN(height)) {
             return res.status(400).json({ success: false, error: "Invalid overlay size" });
         }
