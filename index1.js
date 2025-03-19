@@ -1,12 +1,9 @@
-import express from 'express';
-import cors from 'cors';
-import multer from 'multer';
-import * as Jimp from 'jimp';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const express = require('express');
+const cors = require('cors');
+const multer = require('multer');
+const Jimp = require('jimp');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const port = 3011;
@@ -17,12 +14,11 @@ const upload = multer({ storage: storage });
 
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static(join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Ensure uploads directory exists
-import { mkdirSync } from 'fs';
 try {
-  mkdirSync(join(__dirname, 'uploads'), { recursive: true });
+  fs.mkdirSync(path.join(__dirname, 'uploads'), { recursive: true });
 } catch (err) {
   if (err.code !== 'EEXIST') throw err;
 }
@@ -53,7 +49,7 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
     
     // Generate unique filename
     const filename = `processed-${Date.now()}.png`;
-    const outputPath = join(__dirname, 'uploads', filename);
+    const outputPath = path.join(__dirname, 'uploads', filename);
     
     // Save the processed image
     await productImage.writeAsync(outputPath);
@@ -75,7 +71,6 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
-
 
 /* app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
