@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
 import * as Jimp from 'jimp';
+import { read } from 'jimp';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
