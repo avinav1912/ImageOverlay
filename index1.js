@@ -57,11 +57,21 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
         //overlayImage.resize(parseInt(overlaySize.width), parseInt(overlaySize.height));
 
         // Calculate the position for composite
-        const x = parseInt(overlayPosition.x);
-        const y = parseInt(overlayPosition.y);
+
+        let parsedOverlayPosition = typeof overlayPosition === "string" ? JSON.parse(overlayPosition) : overlayPosition;
+        const x = parseInt(String(parsedOverlayPosition?.x).trim(), 16);
+        const y = parseInt(String(parsedOverlayPosition?.y).trim(), 16);
+        console.log("X: "+x);
+        console.log("Y: "+y);
+        if (isNaN(x) || isNaN(y)) {
+            return res.status(400).json({ success: false, error: "Invalid overlay position" });
+        }
+            
+        //const x = parseInt(overlayPosition.x);
+        //const y = parseInt(overlayPosition.y);
 
         // Composite the images
-        productImage.composite(overlayImage, overlayPosition.x, overlayPosition.y);
+        productImage.composite(overlayImage, x, y);
 
 
         /* productImage.composite(overlayImage, x, y, {
