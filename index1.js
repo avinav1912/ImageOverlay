@@ -36,8 +36,15 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
         // Resize the overlay image to match the specified dimensions
         console.log("OverlaySize: "+overlaySize);
         console.log("OverlayPosition: "+overlayPosition);
-        const width = parseInt(overlaySize?.width, 10);
-        const height = parseInt(overlaySize?.height, 10);
+        
+        let parsedOverlaySize = typeof overlaySize === "string" ? JSON.parse(overlaySize) : overlaySize;
+        const width = parseInt(String(parsedOverlaySize?.width).trim(), 16);
+        const height = parseInt(String(parsedOverlaySize?.height).trim(), 16);
+
+        //const width = parseInt(overlaySize?.width, 10);
+        //const height = parseInt(overlaySize?.height, 10);
+        //const height = overlaySize?.height;
+        //const width = overlaySize?.width;
         console.log("Width: "+width);
         console.log("Height: "+height);
         if (isNaN(width) || isNaN(height)) {
