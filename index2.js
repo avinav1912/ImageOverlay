@@ -4,6 +4,7 @@ const multer = require('multer');
 const Jimp = require('jimp');
 const path = require('path');
 const fs = require('fs');
+const { console } = require('inspector');
 
 const app = express();
 const port = 3011;
@@ -86,6 +87,7 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
       // Calculate scaling factors using bitmap dimensions
       const scaleX = productImage.bitmap.width / containerSize.width;
       const scaleY = productImage.bitmap.height / containerSize.height;
+      console.log('Scaling factors:', { scaleX, scaleY });
 
     let parsedOverlaySize = typeof overlaySize === "string" ? JSON.parse(overlaySize) : overlaySize;
     const overlaySizewidth = parseInt(String(parsedOverlaySize?.width).trim(), 16);
@@ -112,11 +114,12 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
       width: Math.round(overlaySizewidth * scaleX),
       height: Math.round(overlaySizeheight * scaleY)
     };
-
+    console.log("scaledSize: "+scaledSize);
     const scaledPosition = {
       x: Math.round(overlayPositionx * scaleX),
       y: Math.round(overlayPositiony * scaleY)
     };
+    console.log("scaledPosition: "+scaledPosition);
     
     // Resize the overlay image
     overlayImage.resize(scaledSize.width, scaledSize.height);
