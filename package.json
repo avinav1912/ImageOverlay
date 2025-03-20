@@ -2,10 +2,10 @@
   "name": "my-node-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index1.js",
+  "main": "index2.js",
   "scripts": {
-    "start": "node index1.js",
-    "dev": "nodemon index1.js",
+    "start": "node index2.js",
+    "dev": "nodemon index2.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

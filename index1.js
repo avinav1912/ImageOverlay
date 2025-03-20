@@ -27,21 +27,10 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
     try {
         const { productUrl, overlayPosition, overlaySize } = req.body;
 
-        // Load the product image
-        //const productImage = await Jimp.read(productUrl);
-
-        // Load the user's overlay image from the uploaded buffer
-        //const overlayImage = await Jimp.read(req.file.buffer);
-         
-
         const [productImage, overlayImage] = await Promise.all([
             Jimp.read(productUrl),
             Jimp.read(req.file.buffer)
           ]);
-
-
-
-
         // Resize the overlay image to match the specified dimensions
         console.log("OverlaySize: "+overlaySize);
         console.log("OverlayPosition: "+overlayPosition);
@@ -50,10 +39,6 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
         const width = parseInt(String(parsedOverlaySize?.width).trim(), 16);
         const height = parseInt(String(parsedOverlaySize?.height).trim(), 16);
 
-        //const width = parseInt(overlaySize?.width, 10);
-        //const height = parseInt(overlaySize?.height, 10);
-        //const height = overlaySize?.height;
-        //const width = overlaySize?.width;
         console.log("Width: "+width);
         console.log("Height: "+height);
         if (isNaN(width) || isNaN(height)) {
@@ -62,8 +47,6 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
 
         overlayImage.resize(width, height);
 
-
-        //overlayImage.resize(parseInt(overlaySize.width), parseInt(overlaySize.height));
 
         // Calculate the position for composite
 
@@ -75,33 +58,14 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
         if (isNaN(x) || isNaN(y)) {
             return res.status(400).json({ success: false, error: "Invalid overlay position" });
         }
-            
-        //const x = parseInt(overlayPosition.x);
-        //const y = parseInt(overlayPosition.y);
 
         // Composite the images
         productImage.composite(overlayImage, x, y);
 
 
-        /* productImage.composite(overlayImage, x, y, {
-            mode: Jimp.BLEND_SOURCE_OVER,
-            opacitySource: 1,
-            opacityDest: 1
-        }); */
-
         // Generate unique filename
         const filename = `processed-${Date.now()}.png`;
         const outputPath = path.join(__dirname, 'uploads', filename);
-
-        // Save the processed image
-        //await productImage.writeAsync(outputPath);
-
-        /* if (productImage instanceof Jimp) {
-            await productImage.writeAsync(outputPath);
-        } else {
-            console.error("productImage is not a valid Jimp instance:", productImage);
-        } */
-
 
         // Write the file using a Promise wrapper
     await new Promise((resolve, reject) => {
