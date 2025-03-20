@@ -126,7 +126,7 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
     
     // Generate unique filename
     const filename = `processed-${Date.now()}.png`;
-    const outputPath = join(__dirname, 'uploads', filename);
+    const outputPath = path.join(__dirname, 'uploads', filename);
     
     // Write the file using a Promise wrapper
     await new Promise((resolve, reject) => {
