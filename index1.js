@@ -61,11 +61,14 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
         const y = parseInt(overlayPosition.y);
 
         // Composite the images
-        productImage.composite(overlayImage, x, y, {
+        productImage.composite(overlayImage, overlayPosition.x, overlayPosition.y);
+
+
+        /* productImage.composite(overlayImage, x, y, {
             mode: Jimp.BLEND_SOURCE_OVER,
             opacitySource: 1,
             opacityDest: 1
-        });
+        }); */
 
         // Generate unique filename
         const filename = `processed-${Date.now()}.png`;
