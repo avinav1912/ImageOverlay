@@ -96,11 +96,20 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
         // Save the processed image
         //await productImage.writeAsync(outputPath);
 
-        if (productImage instanceof Jimp) {
+        /* if (productImage instanceof Jimp) {
             await productImage.writeAsync(outputPath);
         } else {
             console.error("productImage is not a valid Jimp instance:", productImage);
-        }
+        } */
+
+
+        // Write the file using a Promise wrapper
+    await new Promise((resolve, reject) => {
+        productImage.write(outputPath, (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
 
         // Return the URL of the processed image
         res.json({
