@@ -91,8 +91,8 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
       console.log('scale y: '+scaleY);
 
     let parsedOverlaySize = typeof overlaySize === "string" ? JSON.parse(overlaySize) : overlaySize;
-    const overlaySizewidth = parseInt(String(parsedOverlaySize?.width).trim(), 16);
-    const overlaySizeheight = parseInt(String(parsedOverlaySize?.height).trim(), 16);
+    const overlaySizewidth = parseInt(String(parsedOverlaySize?.width).trim(), 10);
+    const overlaySizeheight = parseInt(String(parsedOverlaySize?.height).trim(), 10);
 
     console.log("overlaySizewidth: "+overlaySizewidth);
         console.log("overlaySizeheight: "+overlaySizeheight);
@@ -102,8 +102,8 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
 
 
         let parsedOverlayPosition = typeof overlayPosition === "string" ? JSON.parse(overlayPosition) : overlayPosition;
-        const overlayPositionx = parseInt(String(parsedOverlayPosition?.x).trim(), 16);
-        const overlayPositiony = parseInt(String(parsedOverlayPosition?.y).trim(), 16);
+        const overlayPositionx = parseInt(String(parsedOverlayPosition?.x).trim(), 10);
+        const overlayPositiony = parseInt(String(parsedOverlayPosition?.y).trim(), 10);
         console.log("overlayPositionx: "+overlayPositionx);
         console.log("overlayPositiony: "+overlayPositiony);
         if (isNaN(overlayPositionx) || isNaN(overlayPositiony)) {
