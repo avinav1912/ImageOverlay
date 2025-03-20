@@ -8,27 +8,19 @@ const fs = require('fs');
 const app = express();
 const port = 3011;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-
-
 // Configure multer for handling file uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Configure CORS for production
 app.use(cors());
-
 app.use(express.json());
-app.use('/uploads', express.static(join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Ensure uploads directory exists
-import { mkdirSync } from 'fs';
 try {
-  mkdirSync(join(__dirname, 'uploads'), { recursive: true });
+    fs.mkdirSync(path.join(__dirname, 'uploads'), { recursive: true });
 } catch (err) {
-  if (err.code !== 'EEXIST') throw err;
+    if (err.code !== 'EEXIST') throw err;
 }
 
 app.post('/api/process', upload.single('userImage'), async (req, res) => {
