@@ -87,7 +87,8 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
       // Calculate scaling factors using bitmap dimensions
       const scaleX = productImage.bitmap.width / containerSize.width;
       const scaleY = productImage.bitmap.height / containerSize.height;
-      console.log('Scaling factors:', { scaleX, scaleY });
+      console.log('scale x: '+scaleX);
+      console.log('scale y: '+scaleY);
 
     let parsedOverlaySize = typeof overlaySize === "string" ? JSON.parse(overlaySize) : overlaySize;
     const overlaySizewidth = parseInt(String(parsedOverlaySize?.width).trim(), 16);
@@ -119,7 +120,8 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
       x: Math.round(overlayPositionx * scaleX),
       y: Math.round(overlayPositiony * scaleY)
     };
-    console.log("scaledPosition: "+scaledPosition);
+    console.log("sclaedPositionx: "+scaledPosition.x);
+    console.log("sclaedPositiony: "+scaledPosition.y);
     
     // Resize the overlay image
     overlayImage.resize(scaledSize.width, scaledSize.height);
