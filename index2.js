@@ -46,16 +46,46 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
     });
 
     // Load images in parallel
-    const [productImage, overlayImage] = await Promise.all([
+    /* const [productImage, overlayImage] = await Promise.all([
       Jimp.read(productUrl),
       Jimp.read(req.file.buffer)
     ]);
-
+ */
     // Calculate scaling factors
-    const scaleX = productImage.getWidth() / containerSize.width;
-    const scaleY = productImage.getHeight() / containerSize.height;
+   /*  const scaleX = productImage.getWidth() / containerSize.width;
+    const scaleY = productImage.getHeight() / containerSize.height; */
     
-
+    try {
+        productImage = await Jimp.read(productUrl);
+        console.log('Product image loaded successfully:', {
+          width: productImage.bitmap.width,
+          height: productImage.bitmap.height
+        });
+      } catch (error) {
+        console.error('Error loading product image:', error);
+        return res.status(400).json({
+          success: false,
+          error: 'Failed to load product image: ' + error.message
+        });
+      }
+  
+      try {
+        overlayImage = await Jimp.read(req.file.buffer);
+        console.log('Overlay image loaded successfully:', {
+          width: overlayImage.bitmap.width,
+          height: overlayImage.bitmap.height
+        });
+      } catch (error) {
+        console.error('Error loading overlay image:', error);
+        return res.status(400).json({
+          success: false,
+          error: 'Failed to load overlay image: ' + error.message
+        });
+      }
+  
+      // Calculate scaling factors using bitmap dimensions
+      const scaleX = productImage.bitmap.width / containerSize.width;
+      const scaleY = productImage.bitmap.height / containerSize.height;
 
     let parsedOverlaySize = typeof overlaySize === "string" ? JSON.parse(overlaySize) : overlaySize;
     const overlaySizewidth = parseInt(String(parsedOverlaySize?.width).trim(), 16);
