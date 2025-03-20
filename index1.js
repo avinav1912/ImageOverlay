@@ -28,10 +28,19 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
         const { productUrl, overlayPosition, overlaySize } = req.body;
 
         // Load the product image
-        const productImage = await Jimp.read(productUrl);
+        //const productImage = await Jimp.read(productUrl);
 
         // Load the user's overlay image from the uploaded buffer
-        const overlayImage = await Jimp.read(req.file.buffer);
+        //const overlayImage = await Jimp.read(req.file.buffer);
+         
+
+        const [productImage, overlayImage] = await Promise.all([
+            Jimp.read(productUrl),
+            Jimp.read(req.file.buffer)
+          ]);
+
+
+
 
         // Resize the overlay image to match the specified dimensions
         console.log("OverlaySize: "+overlaySize);
@@ -85,7 +94,13 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
         const outputPath = path.join(__dirname, 'uploads', filename);
 
         // Save the processed image
-        await productImage.writeAsync(outputPath);
+        //await productImage.writeAsync(outputPath);
+
+        if (productImage instanceof Jimp) {
+            await productImage.writeAsync(outputPath);
+        } else {
+            console.error("productImage is not a valid Jimp instance:", productImage);
+        }
 
         // Return the URL of the processed image
         res.json({
