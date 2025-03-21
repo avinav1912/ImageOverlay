@@ -30,6 +30,8 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
     const overlayPosition = JSON.parse(req.body.overlayPosition);
     const overlaySize = JSON.parse(req.body.overlaySize);
     const containerSize = JSON.parse(req.body.containerSize);
+    const rotation = parseInt(req.body.rotation) || 0;
+    const scale = parseFloat(req.body.scale) || 1;
     
     // Validate the input parameters
     if (!productUrl || !overlayPosition || !overlaySize || !req.file || !containerSize) {
@@ -123,8 +125,20 @@ app.post('/api/process', upload.single('userImage'), async (req, res) => {
     console.log("sclaedPositionx: "+scaledPosition.x);
     console.log("sclaedPositiony: "+scaledPosition.y);
     
+
+    // Apply scale transformation
+    const finalWidth = Math.round(scaledSize.width * scale);
+    const finalHeight = Math.round(scaledSize.height * scale);
+    
     // Resize the overlay image
-    overlayImage.resize(scaledSize.width, scaledSize.height);
+    overlayImage.resize(finalWidth, finalHeight);
+    // Apply rotation if needed
+    if (rotation !== 0) {
+        overlayImage.rotate(rotation);
+      }
+
+    // Resize the overlay image
+    //overlayImage.resize(scaledSize.width, scaledSize.height);
     
     // Composite the images
     productImage.composite(overlayImage, scaledPosition.x, scaledPosition.y);
